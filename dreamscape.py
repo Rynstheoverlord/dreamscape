@@ -10,7 +10,7 @@ def give_feedback():
     fb.write(final_feedback)
   st.success("Feedback sent!", icon="✅")
 
-st.markdown("""# Imaginate✨
+st.markdown("""# DreamScape🌌
 Here creativity takes shape""")
 
 
