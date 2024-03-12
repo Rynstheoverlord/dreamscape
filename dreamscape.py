@@ -1,14 +1,12 @@
 import streamlit as st
 import requests, time
 import json
+import smtplib
 
 
-with open("feedback.json", "r") as f:
-    feedback_list = json.load(f)["feedback"]
-
-def give_feedback():
-  
+def feedback_message():
   st.success("Feedback sent!", icon="✅")
+  
 
 st.markdown("""# DreamScape✨
 Here creativity takes shape""")
@@ -19,7 +17,7 @@ def generate_random():
     st.image(f"https://picsum.photos/200/300?random={i}", use_column_width=True)
 
     # download button
-    st.download_button("Download📩", requests.get(f"https://picsum.photos/500/600?random={i}").content, "imaginate.png", mime="image/png", key=f"{i}")
+    st.download_button("Download📩", requests.get(f"https://picsum.photos/500/600?random={i}").content, "dreamscape.png", mime="image/png", key=f"{i}")
 
 
 # expander for random images
@@ -43,7 +41,7 @@ with st.expander("Get specific image"):
 
     
 
-    st.download_button("Download📩", requests.get(f"https://picsum.photos/id/{int(search)}/500/600").content, "imaginate.png", mime="image/png")
+    st.download_button("Download📩", requests.get(f"https://picsum.photos/id/{int(search)}/500/600").content, "dreamscape.png", mime="image/png")
 
 
 # expandable for dogs
@@ -63,7 +61,7 @@ with st.expander("Find dog media here"):
       
     else:
       st.image(response["url"])
-      st.download_button("Download📩", requests.get(response['url']).content, "imaginate.png", mime="image/png")
+      st.download_button("Download📩", requests.get(response['url']).content, "dreamscape.png", mime="image/png")
 
 
 # the final markdown
@@ -76,10 +74,33 @@ please don't forget to give your feedback on what you would like to see added to
 """)
 
 feedback = st.text_input("Give feedback")
-if st.button("Submit", type="primary", use_container_width=True, on_click=give_feedback):
-  feedback_list.append(feedback)
-  with open("feedback.json", "w") as fp:
-    json.dump({"feedback":feedback_list}, fp, sort_keys=True, indent=4)   
+
+if st.button("Submit", type="primary", use_container_width=True):
+    # creates SMTP session
+  
+  print(feedback)
+  
+  s = smtplib.SMTP('smtp.gmail.com', 587)
+  # start TLS for security
+  s.starttls()
+  # Authentication
+  
+  s.login("thecodegeniedev@gmail.com", "lqgl hmlm gzzq yyxy")
+  # message to be sent
+  
+  message = f"""\
+  Subject: feedback from DreamScape.
+
+
+  Message:
+  {feedback}"""
+  # sending the mail
+  
+  s.sendmail("thecodegeniedev@gmail.com", "rynstheoverlord@gmail.com", message)
+  # terminating the session
+  s.quit()
+  feedback_message()
+  
 
 
 st.markdown("""**Developer email:** rynstheoverlord@gmail.com✉️""")
